@@ -62,8 +62,6 @@ class DataReader:
         self.lyric_indices = [list(map(lambda word: self.vocab_lookup[word], song))
                               for song in self.lyrics]
 
-        print(len(tokens))
-
         return tokens
 
     def get_train_batch(self, batch_size, seq_len):

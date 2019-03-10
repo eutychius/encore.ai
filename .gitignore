@@ -97,6 +97,9 @@ hand_picked.txt
 unified_artists.txt
 completed_artists.txt
 
+# Models
+save/
+
 # Node JS
 node_modules/
 
