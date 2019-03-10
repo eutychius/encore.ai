@@ -37,11 +37,9 @@ class LyricGenRunner:
         self.sess = tf.Session()
         self.artist_name = artist_name
 
-        print('Process data...')
         self.data_reader = DataReader(self.artist_name)
         self.vocab = self.data_reader.get_vocab()
 
-        print('Init model...')
         self.model = LSTMModel(self.sess,
                                self.vocab,
                                c.BATCH_SIZE,
@@ -50,17 +48,15 @@ class LyricGenRunner:
                                c.NUM_LAYERS,
                                test=test)
 
-        print('Init variables...')
         self.saver = tf.train.Saver(max_to_keep=None)
         self.sess.run(tf.global_variables_initializer())
 
         # if load path specified, load a saved model
         if model_load_path is not None:
             self.saver.restore(self.sess, model_load_path)
-            print('Model restored from ' + model_load_path)
 
         if test:
-            self.test(prime_text)
+            self.test(prime_text, c.SEQ_LEN)
         else:
             self.train()
 
@@ -83,12 +79,12 @@ class LyricGenRunner:
                 self.saver.save(self.sess, join(c.MODEL_SAVE_DIR, self.artist_name + '.ckpt'),
                                 global_step=global_step)
 
-    def test(self, prime_text):
+    def test(self, prime_text, num_out):
         """
         Generates a text sequence.
         """
         # generate and save sample sequence
-        sample = self.model.generate(prime=prime_text)
+        sample = self.model.generate(prime=prime_text, num_out=int(num_out))
 
         print(sample)
 

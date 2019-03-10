@@ -104,42 +104,12 @@ class LSTMModel:
                                                                    scope='lstm_vars')
         lstm_outputs = tf.reshape(tf.concat(lstm_outputs_split, 1), [-1, self.cell_size])
 
-        # outputs looks like this:
-        # [
-        #   tensor_<0>([
-        #       [batchElt<0>_outputEmbedding<0>],
-        #       ...,
-        #       [batchElt<batch_size - 1>_outputEmbedding<0>]
-        #   ]),
-        #   ...,
-        #   tensor_<seq_len - 1>([
-        #       [batchElt<0>_outputEmbedding<seq_len - 1>],
-        #       ...,
-        #       [batchElt<batch_size - 1>_outputEmbedding<seq_len - 1>]
-        #   ])
-        # ]
-
-        # output looks like this:
-        # tensor([
-        #     [batchElt<0>_outputEmbedding<0>],
-        #     ...,
-        #     [batchElt<0>_outputEmbedding<seq_len - 1>],
-        #     [batchElt<1>_outputEmbedding<0>],
-        #     ...,
-        #     [batchElt<1>_outputEmbedding<seq_len - 1>],
-        #     ...
-        #     [batchElt<batch_size - 1>_outputEmbedding<0>],
-        #     ...,
-        #     [batchElt<batch_size - 1>_outputEmbedding<seq_len - 1>]
-        # ])
-
         logits = tf.matmul(lstm_outputs, self.ws) + self.bs
         self.probs = tf.nn.softmax(logits)
 
         ##
         # Train
         ##
-
         total_loss = seq2seq.sequence_loss_by_example([logits],
                                                       [tf.reshape(self.targets, [-1])],
                                                       [tf.ones([self.batch_size * self.seq_len])],
@@ -173,7 +143,6 @@ class LSTMModel:
 
         # prime the model state
         for word in prime.split():
-            print(word)
             last_word_i = self.vocab.index(word)
             input_i = np.array([[last_word_i]])
 
