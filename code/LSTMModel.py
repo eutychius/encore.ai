@@ -1,7 +1,6 @@
 # inspired by https://github.com/hunkim/word-rnn-tensorflow
 
 import tensorflow as tf
-from tensorflow.python.ops import rnn_cell
 from tensorflow.contrib.legacy_seq2seq.python.ops import seq2seq
 import numpy as np
 
@@ -47,8 +46,8 @@ class LSTMModel:
         # LSTM Cells
         ##
 
-        lstm_cell = rnn_cell.BasicLSTMCell(self.cell_size)
-        self.cell = rnn_cell.MultiRNNCell([lstm_cell] * self.num_layers)
+        lstm_cell = tf.keras.layers.LSTMCell(self.cell_size)
+        self.cell = tf.keras.layers.StackedRNNCells([lstm_cell] * self.num_layers)
 
         ##
         # Data
@@ -57,7 +56,7 @@ class LSTMModel:
         # inputs and targets are 2D tensors of shape
         self.inputs = tf.placeholder(tf.int32, [self.batch_size, self.seq_len])
         self.targets = tf.placeholder(tf.int32, [self.batch_size, self.seq_len])
-        self.initial_state = self.cell.zero_state(self.batch_size, tf.float32)
+        self.initial_state = self.cell.get_initial_state(batch_size=self.batch_size, dtype=tf.float32)
 
         ##
         # Variables
@@ -65,7 +64,7 @@ class LSTMModel:
         with tf.variable_scope('lstm_vars'):
             self.ws = tf.get_variable('ws', [self.cell_size, self.vocab_size])
             self.bs = tf.get_variable('bs', [self.vocab_size])  # TODO: initializer?
-            with tf.device('/cpu:0'): # put on CPU to parallelize for faster training/
+            with tf.device('/cpu:0'):  # put on CPU to parallelize for faster training/
                 self.embeddings = tf.get_variable('embeddings', [self.vocab_size, self.cell_size])
 
                 # get embeddings for all input words
@@ -75,7 +74,6 @@ class LSTMModel:
                 # of each tensor
                 inputs_split = tf.split(input_embeddings, self.seq_len, 1)
                 inputs_split = [tf.squeeze(input_, [1]) for input_ in inputs_split]
-
 
                 # inputs_split looks like this:
                 # [
