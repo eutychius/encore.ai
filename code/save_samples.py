@@ -31,12 +31,12 @@ def save(artist, model_path, num_save):
     sample_save_dir = c.get_dir('../save/samples/')
     sess = tf.Session()
 
-    print artist
+    print(artist)
 
     data_reader = DataReader(artist)
     vocab = data_reader.get_vocab()
 
-    print 'Init model...'
+    print('Init model...')
     model = LSTMModel(sess,
                       vocab,
                       c.BATCH_SIZE,
@@ -49,11 +49,11 @@ def save(artist, model_path, num_save):
     sess.run(tf.initialize_all_variables())
 
     saver.restore(sess, model_path)
-    print 'Model restored from ' + model_path
+    print('Model restored from ' + model_path)
 
     artist_save_dir = c.get_dir(join(sample_save_dir, artist))
-    for i in xrange(num_save):
-        print i
+    for i in range(num_save):
+        print(i)
 
         path = join(artist_save_dir, str(i) + '.txt')
         sample = model.generate()

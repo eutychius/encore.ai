@@ -8,6 +8,7 @@ import numpy as np
 import constants as c
 from utils import unkify
 
+
 # noinspection PyAttributeOutsideInit
 class LSTMModel:
     def __init__(self, sess, vocab, batch_size, seq_len, cell_size, num_layers, test=False):
@@ -151,8 +152,7 @@ class LSTMModel:
                                                 global_step=self.global_step,
                                                 name='train_op')
 
-
-    def generate(self, num_out=200, prime=None, sample=True):
+    def generate(self, num_out=400, prime=None, sample=True):
         """
         Generate a sequence of text from the trained model.
 
@@ -173,7 +173,7 @@ class LSTMModel:
 
         # prime the model state
         for word in prime.split():
-            print word
+            print(word)
             last_word_i = self.vocab.index(word)
             input_i = np.array([[last_word_i]])
 
@@ -182,7 +182,7 @@ class LSTMModel:
 
         # generate the sequence
         gen_seq = prime
-        for i in xrange(num_out):
+        for i in range(num_out):
             # generate word probabilities
             input_i = np.array([[last_word_i]]) #TODO: use dictionary?
             feed_dict = {self.inputs: input_i, self.initial_state: state}

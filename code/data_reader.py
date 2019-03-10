@@ -1,9 +1,9 @@
+from functools import reduce
+
 import numpy as np
 import os
 import random
-from collections import Counter
 
-import constants as c
 
 class DataReader:
     def __init__(self, artist_name):
@@ -39,7 +39,7 @@ class DataReader:
             self.load_lyrics()
 
         # Collapses the 2D array to a 1D array of words
-        all_words = reduce(lambda a,b: a + b, self.lyrics)
+        all_words = reduce(lambda a, b: a + b, self.lyrics)
 
         # TODO: Find out why this UNK code causes differences between Linux and OS X vocabularies
         # # convert THRESHOLD_COUNT frequent words to '*UNK*'
@@ -59,10 +59,10 @@ class DataReader:
         # creates a map from word to index
         self.vocab_lookup = dict((word, i) for i, word in enumerate(tokens))
         # Converts words in self.lyrics to the appropriate indices.
-        self.lyric_indices = [map(lambda word: self.vocab_lookup[word], song)
+        self.lyric_indices = [list(map(lambda word: self.vocab_lookup[word], song))
                               for song in self.lyrics]
 
-        print len(tokens)
+        print(len(tokens))
 
         return tokens
 
@@ -78,7 +78,7 @@ class DataReader:
         inputs = np.empty([batch_size, seq_len], dtype=int)
         targets = np.empty([batch_size, seq_len], dtype=int)
 
-        for i in xrange(batch_size):
+        for i in range(batch_size):
             inp, target = self.get_seq(seq_len)
             inputs[i] = inp
             targets[i] = target
@@ -94,14 +94,14 @@ class DataReader:
         @return: A tuple of sequences, (input, target) offset from each other by one word.
         """
         # Pick a random song. Must be longer than seq_len
-        for i in xrange(1000):  # cap at 1000 tries
+        for i in range(1000):  # cap at 1000 tries
             song = random.choice(self.lyric_indices)
             if len(song) > seq_len: break
 
         # Take a sequence of (seq_len) from the song lyrics
         i = random.randint(0, len(song) - (seq_len + 1))
         inp= np.array(song[i:i+seq_len], dtype=int)
-        target =  np.array(song[i+1:i+seq_len+1], dtype=int)
+        target = np.array(song[i+1:i+seq_len+1], dtype=int)
         return inp, target
 
     def clean_string(self, string):
