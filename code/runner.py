@@ -12,14 +12,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.logging.set_verbosity(tf.logging.ERROR)
 
 # https://github.com/dyelax/encore.ai
-#Pick an artist – it should be someone with a lot of lyrics. (Over 100,000 words).
-#Collect all of the artist's lyrics from your favorite lyrics website. Save each song as a text file in data/artist_name/. We recommend leaving newlines in as a special token so that the network will learn line and stanza breaks.
-#Train by navigating to the code directory and running python runner.py -a <artist_name> -m <model_save_name>.
-#Our models were all trained for 30,000 steps.
-#Generate new songs by running
-#python runner.py -a <artist_name> -l ../save/models/<model_save_name>/<ckpt_file> -t.
-#Optional: If you would like to specify "prime text" – the initial text that the model will generate from – pass in a string with the -p flag.
-#Share your trained models with us so we can feature them on our website! Create an issue with a link to a public Dropbox or Google Drive containing your model's .ckpt file.
 class LyricGenRunner:
     def __init__(self, model_load_path, artist_name, test, prime_text):
         """

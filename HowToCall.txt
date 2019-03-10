@@ -1,0 +1,15 @@
+Call for creating new model:
+
+python runner.py -a SnoopDogg -m SnoopDogg
+
+
+
+Call for generating text:
+
+python runner.py --artist_name KaeptnPeng --load_path ../save/models/KaeptnPeng/KaeptnPeng.ckpt --test --seq_len 400 --prime "asd"
+
+artist_name: name of artist, always required for loading vocabulary
+load_path: path to the model ckpt
+test: required for output
+seq_len: length of output, default is 400 words
+prime: first n words, must exist in vocabulary of artist
