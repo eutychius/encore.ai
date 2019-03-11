@@ -13,7 +13,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 
 # https://github.com/dyelax/encore.ai
 class LyricGenRunner:
-    def __init__(self, model_load_path, artist_name, test, prime_text):
+    def __init__(self, model_load_path, artist_name, test, prime_text, printVocabulary):
         """
         Initializes the Lyric Generation Runner.
 
@@ -26,12 +26,16 @@ class LyricGenRunner:
         @param prime_text: The text with which to start the test sequence.
         """
 
-        self.sess = tf.Session()
         self.artist_name = artist_name
 
         self.data_reader = DataReader(self.artist_name)
         self.vocab = self.data_reader.get_vocab()
 
+        if printVocabulary:
+            print(self.vocab)
+            return
+
+        self.sess = tf.Session()
         self.model = LSTMModel(self.sess,
                                self.vocab,
                                c.BATCH_SIZE,
@@ -86,11 +90,12 @@ def main():
     artist_name = 'kanye_west'
     test = False
     prime_text = None
+    printVocabulary = False
 
     try:
         opts, _ = getopt.getopt(sys.argv[1:], 'l:m:a:p:s:t', ['load_path=', 'model_name=',
                                                             'artist_name=', 'prime=', 'seq_len',
-                                                            'test', 'save_freq='])
+                                                            'test', 'save_freq=', 'vocabulary'])
     except getopt.GetoptError:
         sys.exit(2)
 
@@ -109,8 +114,10 @@ def main():
             test = True
         if opt == '--save_freq':
             c.MODEL_SAVE_FREQ = int(arg)
+        if opt == '--vocabulary':
+            printVocabulary = True
 
-    LyricGenRunner(load_path, artist_name, test, prime_text)
+    LyricGenRunner(load_path, artist_name, test, prime_text, printVocabulary)
 
 
 if __name__ == '__main__':

@@ -61,7 +61,6 @@ class DataReader:
         # Converts words in self.lyrics to the appropriate indices.
         self.lyric_indices = [list(map(lambda word: self.vocab_lookup[word], song))
                               for song in self.lyrics]
-
         return tokens
 
     def get_train_batch(self, batch_size, seq_len):

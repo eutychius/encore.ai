@@ -18,3 +18,8 @@ load_path: path to the model ckpt
 test: required for output
 seq_len: length of output, default is 400 words
 prime: first n words, must exist in vocabulary of artist
+
+
+Call for getting distinct vocabulary from artist:
+
+python runner.py -a SnoopDogg --vocabulary
