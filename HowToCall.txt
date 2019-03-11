@@ -1,3 +1,8 @@
+Folder Structure:
+\data\artists\[ArtistName]\[Lyrics.txts]
+\save\models\[ArtistName]\[ArtistName.ckpt.*]
+
+
 Call for creating new model:
 
 python runner.py -a SnoopDogg -m SnoopDogg
