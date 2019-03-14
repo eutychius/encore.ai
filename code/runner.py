@@ -32,7 +32,8 @@ class LyricGenRunner:
         self.vocab = self.data_reader.get_vocab()
 
         if printVocabulary:
-            print(self.vocab)
+            for word in self.vocab:
+                print(word)
             return
 
         self.sess = tf.Session()
